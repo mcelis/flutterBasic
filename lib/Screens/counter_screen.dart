@@ -8,6 +8,21 @@ class CounterScreen extends StatefulWidget {
 }
 
 class _CounterScreenState extends State<CounterScreen> {
+  void increase() {
+    counter++;
+    setState(() {});
+  }
+
+  void decrease() {
+    counter--;
+    setState(() {});
+  }
+
+  void reset() {
+    counter = 0;
+    setState(() {});
+  }
+
   //propiedades
   int counter = 0;
   @override
@@ -30,25 +45,47 @@ class _CounterScreenState extends State<CounterScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FloatingActionButton(
-            child: const Icon(Icons.exposure_minus_1),
-            onPressed: () => setState(() => counter--),
-          ),
-          //const SizedBox(width: 20),
-          FloatingActionButton(
-            child: const Icon(Icons.restore),
-            onPressed: () => setState(() => counter = 0),
-          ),
-          //const SizedBox(width: 20), // es como un BR en web
-          FloatingActionButton(
-            child: const Icon(Icons.exposure_plus_1),
-            onPressed: () => setState(() => counter++),
-          ),
-        ],
+      floatingActionButton: CustomFloatingActions(
+        increaseFn: increase,
+        resetFn: reset,
+        decreaseFn: decrease,
       ),
+    );
+  }
+}
+
+class CustomFloatingActions extends StatelessWidget {
+  final Function increaseFn;
+  final Function decreaseFn;
+  final Function resetFn;
+
+  const CustomFloatingActions({
+    super.key,
+    required this.increaseFn,
+    required this.decreaseFn,
+    required this.resetFn,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        FloatingActionButton(
+          child: const Icon(Icons.exposure_minus_1),
+          onPressed: () => decreaseFn(),
+        ),
+        //const SizedBox(width: 20),
+        FloatingActionButton(
+          onPressed: () => resetFn(),
+          child: const Icon(Icons.restore),
+        ),
+        //const SizedBox(width: 20), // es como un BR en web
+        FloatingActionButton(
+          onPressed: () => increaseFn(),
+          child: const Icon(Icons.exposure_plus_1),
+        ),
+      ],
     );
   }
 }
